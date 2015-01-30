@@ -1,7 +1,3 @@
-Hello!
-<!DOCTYPE html>
-<meta charset="utf-8">
-<title>Web Speech API Demo</title>
 <style>
   * {
     font-family: Verdana, Arial, sans-serif;
@@ -70,73 +66,17 @@ Hello!
     padding: 0;
   }
 </style>
+Login to play with the functionality!
+<link rel="stylesheet" href="stylesheets/colpick.css" type="text/css"/>
 <div id="spark-login">
 </div>
 <div id="result">
 </div>
 <div id="toggle-lights" style="visibility: hidden;">
+  <div id="picker"></div>
   <input id="light-value" type="text" name="light-value">
   <button onclick="toggleLights()">Toggle Lights</button>
 <div>
-<script src="//cdn.jsdelivr.net/sparkjs/0.2.4/spark.min.js"></script> <!-- The script for SparkJS -->
-<script>
-  var device;
-  // This gets called when a user finishes the login flow.
-  sparkLogin(function(data){
-      // Your code here
-      var result = document.getElementById("result");
-      result.innerHTML = "You are now logged in! </br> Give us a moment while we find your devices.";
-      document.getElementById("spark-login").style.visibility = 'hidden';
-      document.getElementById("toggle-lights").style.visibility = 'visible';
-      console.log(data);
-      console.log(spark);
-      
-      spark.listDevices(function(err, devices) {
-        device = devices[1];
-
-        console.log('Device name: ' + device.name);
-        result.innerHTML = 'Device name: ' + device.name + '</br>';
-        console.log('- connected?: ' + device.connected);
-        result.innerHTML += '- connected?: ' + device.connected + '</br>';
-        console.log('- variables: ' + device.variables);
-        result.innerHTML += '- variables: ' + device.variables + '</br>';
-        console.log('- functions: ' + device.functions);
-        result.innerHTML += '- functions: ' + device.functions + '</br>';
-        console.log('- version: ' + device.version);
-        result.innerHTML += '- version: ' + device.version + '</br>';
-        console.log('- requires upgrade?: ' + device.requiresUpgrade);
-        result.innerHTML += '- requires upgrade?: ' + device.requiresUpgrade + '</br>';
-      });
-  });
-  
-  function toggleLights(){
-    console.log("toggleLights was called");
-    
-    console.log('Device name: ' + device.name);
-        result.innerHTML = 'Device name: ' + device.name + '</br>';
-        console.log('- connected?: ' + device.connected);
-        result.innerHTML += '- connected?: ' + device.connected + '</br>';
-        console.log('- variables: ' + device.variables);
-        result.innerHTML += '- variables: ' + device.variables + '</br>';
-        console.log('- functions: ' + device.functions);
-        result.innerHTML += '- functions: ' + device.functions + '</br>';
-        console.log('- version: ' + device.version);
-        result.innerHTML += '- version: ' + device.version + '</br>';
-        console.log('- requires upgrade?: ' + device.requiresUpgrade);
-        result.innerHTML += '- requires upgrade?: ' + device.requiresUpgrade + '</br>';
-
-    device.callFunction('switchColor', document.getElementById("light-value").value, function(err, data) {
-      if (err) {
-        console.log('An error occurred:', err);
-        result.innerHTML += 'An error occured: ' + err;
-      } else {
-        console.log('Function called succesfully:', data);
-        result.innerHTML += 'Function called succesfully ' + data;
-      }
-    });
-  }
-</script>
-
 <div id="info">
   <p id="info_start">Click on the microphone icon and begin speaking.</p>
   <p id="info_speak_now">Speak now.</p>
@@ -169,5 +109,67 @@ Hello!
     <select id="select_language" onchange="updateCountry()"></select>&nbsp;&nbsp;<select id="select_dialect"></select>
   </div>
 </div>
-
+<script src="//code.jquery.com/jquery-2.1.3.min.js"></script>
 <script src="javascripts/dictation.js"></script>
+
+<script src="//cdn.jsdelivr.net/sparkjs/0.2.4/spark.min.js"></script> <!-- The script for SparkJS -->
+<script src="javascripts/colpick.js" type="text/javascript"></script>
+<script>
+  function pad(num, size) {
+      var s = "000" + num;
+      return s.substr(s.length-size);
+  }
+  $('#picker').colpick({
+    flat:true,
+    layout:'RGB',
+    submit:0,
+    onChange:function(hsb,hex,rgb,el,bySetColor) {
+      //eg. {r:255, g:0, b:0})
+      document.getElementById("light-value").value = pad(rgb.r,3) + ',' + pad(rgb.g,3) + ',' + pad(rgb.b,3);
+      toggleLights();
+    }
+  });
+
+  var device;
+  // This gets called when a user finishes the login flow.
+  sparkLogin(function(data){
+      // Your code here
+      var result = document.getElementById("result");
+      result.innerHTML = "You are now logged in! </br> Give us a moment while we find your devices.";
+      document.getElementById("spark-login").style.visibility = 'hidden';
+      document.getElementById("toggle-lights").style.visibility = 'visible';
+      console.log(data);
+      console.log(spark);
+      
+      spark.listDevices(function(err, devices) {
+        device = devices[1];
+
+        console.log('Device name: ' + device.name);
+        result.innerHTML = 'Device name: ' + device.name + '</br>';
+        console.log('- connected?: ' + device.connected);
+        result.innerHTML += '- connected?: ' + device.connected + '</br>';
+        console.log('- variables: ' + device.variables);
+        result.innerHTML += '- variables: ' + device.variables + '</br>';
+        console.log('- functions: ' + device.functions);
+        result.innerHTML += '- functions: ' + device.functions + '</br>';
+        console.log('- version: ' + device.version);
+        result.innerHTML += '- version: ' + device.version + '</br>';
+        console.log('- requires upgrade?: ' + device.requiresUpgrade);
+        result.innerHTML += '- requires upgrade?: ' + device.requiresUpgrade + '</br>';
+      });
+  });
+  
+  function toggleLights(){
+    console.log("toggleLights was called");
+
+    device.callFunction('switchColor', document.getElementById("light-value").value, function(err, data) {
+      if (err) {
+        console.log('An error occurred:', err);
+        result.innerHTML += 'An error occured: ' + err;
+      } else {
+        console.log('Function called succesfully:', data);
+        result.innerHTML += 'Function called succesfully ' + data;
+      }
+    });
+  }
+</script>
