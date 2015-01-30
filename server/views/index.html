@@ -75,6 +75,7 @@ Hello!
 <div id="result">
 </div>
 <div id="toggle-lights" style="visibility: hidden;">
+  <input id="light-value" type="text" name="light-value">
   <button onclick="toggleLights()">Toggle Lights</button>
 <div>
 <script src="//cdn.jsdelivr.net/sparkjs/0.2.4/spark.min.js"></script> <!-- The script for SparkJS -->
@@ -124,7 +125,7 @@ Hello!
         console.log('- requires upgrade?: ' + device.requiresUpgrade);
         result.innerHTML += '- requires upgrade?: ' + device.requiresUpgrade + '</br>';
 
-    device.callFunction('switchColor', '050,050,050', function(err, data) {
+    device.callFunction('switchColor', document.getElementById("light-value").value, function(err, data) {
       if (err) {
         console.log('An error occurred:', err);
         result.innerHTML += 'An error occured: ' + err;
