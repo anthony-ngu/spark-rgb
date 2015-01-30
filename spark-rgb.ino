@@ -1,5 +1,3 @@
-SYSTEM_MODE(MANUAL);
-
 const int stripClock = D2;
 const int stripData = D3;
 const int stripLen = 48;
@@ -20,6 +18,8 @@ void ShiftAllPixels();
 
 void setup()
 {
+    Spark.function("switchColor", switchColor);
+    Spark.function("turnOff", turnOff);
     // Set pins to outputs
     pinMode(stripClock, OUTPUT);
     pinMode(stripData, OUTPUT);
@@ -36,7 +36,7 @@ void setup()
 
 void loop()
 {
-    int i;
+    /*int i;
 
     // Set the pixels to Red
     for (i = 0; i < stripLen; i++)
@@ -85,7 +85,51 @@ void loop()
     {
         SetPixel(i, 0, 0, 0);
     }
+    ShiftAllPixels();*/
+}
+
+int scaleColor(int color)
+{
+    return (double)color / 255 * 127;
+}
+
+int switchColor(String command)
+{
+    // command will be of format 127,127,127
+    // any values less than 127 will be filled with spaces
+    String red = command;
+    String green = command;
+    String blue = command;
+    red.remove(3);
+    green.remove(0,4);
+    green.remove(3);
+    blue.remove(0,8);
+
+    int redInt = scaleColor(red.toInt());
+    int greenInt = scaleColor(green.toInt());
+    int blueInt = scaleColor(blue.toInt());
+
+    int i;
+    // Set the pixels to White
+    for (i = 0; i < stripLen; i++)
+    {
+        SetPixel(i, (redInt & 0x7F), (greenInt & 0x7F), (blueInt & 0x7F));
+    }
     ShiftAllPixels();
+
+    return 1;
+}
+
+int turnOff(String command)
+{
+    int i;
+    for (i = 0; i < stripLen; i++)
+    {
+        SetPixel(i, 0, 0, 0);
+    }
+    ShiftAllPixels();
+
+    return 1;
 }
 
 // Sets the pixel color in our array
