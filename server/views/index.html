@@ -78,8 +78,10 @@ Made by: <a href="blog.anthonyngu.com" target="_blank">Anthony Ngu</a>
 </div>
 <div id="toggle-lights" style="visibility: hidden;">
   <div id="picker"></div>
-  <input id="light-value" type="text" name="light-value">
-  <input id="sparkDeviceNumber" type="text" name="sparkDeviceNumber" value="1">
+  <br/>
+  RGB Value:<input id="light-value" type="text" name="light-value" value="255,255,255">
+  Spark Device Number:<input id="sparkDeviceNumber" type="text" name="sparkDeviceNumber" value="0">
+  <button onclick="toggleLights()">Toggle Lights</button>
 </div>
 <div id="result">
 </div>
@@ -133,11 +135,11 @@ Made by: <a href="blog.anthonyngu.com" target="_blank">Anthony Ngu</a>
   $('#picker').colpick({
     flat:true,
     layout:'RGB',
-    submit:0,
+    submit:false,
+    color:{r:255, g:255, b:255},
     onChange:function(hsb,hex,rgb,el,bySetColor) {
       //eg. {r:255, g:0, b:0})
       document.getElementById("light-value").value = pad(rgb.r,3) + ',' + pad(rgb.g,3) + ',' + pad(rgb.b,3);
-      toggleLights();
     }
   });
 
@@ -146,33 +148,43 @@ Made by: <a href="blog.anthonyngu.com" target="_blank">Anthony Ngu</a>
   // This gets called when a user finishes the login flow.
   sparkLogin(function(data){
       // Your code here
-      result.innerHTML = "You are now logged in! </br> Give us a moment while we find your devices.";
-      document.getElementById("spark-login").style.visibility = 'hidden';
+      result.innerHTML = "You are now logged in! </br> Give us a moment while we find your devices.\n";
+      document.getElementById("spark-login").style.display = 'none';
       document.getElementById("toggle-lights").style.visibility = 'visible';
       console.log(data);
       console.log(spark);
       
       spark.listDevices(function(err, devices) {
         device_list = devices;
-        device = devices[1];
 
-        console.log('Device name: ' + device.name);
-        result.innerHTML = 'Device name: ' + device.name + '</br>';
-        console.log('- connected?: ' + device.connected);
-        result.innerHTML += '- connected?: ' + device.connected + '</br>';
-        console.log('- variables: ' + device.variables);
-        result.innerHTML += '- variables: ' + device.variables + '</br>';
-        console.log('- functions: ' + device.functions);
-        result.innerHTML += '- functions: ' + device.functions + '</br>';
-        console.log('- version: ' + device.version);
-        result.innerHTML += '- version: ' + device.version + '</br>';
-        console.log('- requires upgrade?: ' + device.requiresUpgrade);
-        result.innerHTML += '- requires upgrade?: ' + device.requiresUpgrade + '</br>';
+        for (var i = 0; i < devices.length; i++)
+        {
+          if (i==0)
+          {
+            result.innerHTML = "";
+          }
+          device = devices[i];
+
+          console.log('Device ' + i + ' name: ' + device.name);
+          result.innerHTML += '<br/>Device ' + i + ' name: ' + device.name + '</br>';
+          console.log('- connected?: ' + device.connected);
+          result.innerHTML += '- connected?: ' + device.connected + '</br>';
+          console.log('- variables: ' + device.variables);
+          result.innerHTML += '- variables: ' + device.variables + '</br>';
+          console.log('- functions: ' + device.functions);
+          result.innerHTML += '- functions: ' + device.functions + '</br>';
+          console.log('- version: ' + device.version);
+          result.innerHTML += '- version: ' + device.version + '</br>';
+          console.log('- requires upgrade?: ' + device.requiresUpgrade);
+          result.innerHTML += '- requires upgrade?: ' + device.requiresUpgrade + '</br>';
+        }
       });
   });
   
   function toggleLights(){
-    device = devices[document.getElementById("sparkDeviceNumber").value.toInt()];
+    console.log(device);
+    console.log(device_list);
+    device = device_list[document.getElementById("sparkDeviceNumber").value];
     console.log("toggleLights was called");
     if(device.connected == true)
     {
