@@ -79,52 +79,110 @@ Made by: <a href="blog.anthonyngu.com" target="_blank">Anthony Ngu</a>
 <div id="toggle-lights" style="visibility: hidden;">
   <div id="picker"></div>
   <br/>
-  RGB Value:<input id="light-value" type="text" name="light-value" value="255,255,255">
-  Spark Device Number:<input id="sparkDeviceNumber" type="text" name="sparkDeviceNumber" value="0">
+  RGB Value:<input id="light-value" type="text" name="light-value" value="255,255,255"/>
+  Spark Device Number:<input id="sparkDeviceNumber" type="text" name="sparkDeviceNumber" value="0"/><br/>
+  All Brightness:<input id="allBrightness" type="range" value="100" min="0" max="100"> <input id="allBrightnessLabel" type="text"><br/>
+  Bottom Brightness:<input id="bottomBrightness" type="range" value="100" min="0" max="100"> <input id="bottomBrightnessLabel" type="text"><br/>
+  Right Brightness:<input id="rightBrightness" type="range" value="100" min="0" max="100"> <input id="rightBrightnessLabel" type="text"><br/>
+  Back Brightness:<input id="backBrightness" type="range" value="100" min="0" max="100"> <input id="backBrightnessLabel" type="text"><br/>
+  Left Brightness:<input id="leftBrightness" type="range" value="100" min="0" max="100"> <input id="leftBrightnessLabel" type="text"><br/>
+  Top Brightness:<input id="topBrightness" type="range" value="100" min="0" max="100"> <input id="topBrightnessLabel" type="text"><br/>
+  <br/>
   <button onclick="toggleLights()">Toggle Lights</button>
 </div>
 <div id="result">
 </div>
 <div id="lasterror">
 </div>
-<div id="info">
-  <p id="info_start">Click on the microphone icon and begin speaking.</p>
-  <p id="info_speak_now">Speak now.</p>
-  <p id="info_no_speech">No speech was detected. You may need to adjust your
-    <a href="//support.google.com/chrome/bin/answer.py?hl=en&amp;answer=1407892">
-      microphone settings</a>.</p>
-  <p id="info_no_microphone" style="display:none">
-    No microphone was found. Ensure that a microphone is installed and that
-    <a href="//support.google.com/chrome/bin/answer.py?hl=en&amp;answer=1407892">
-    microphone settings</a> are configured correctly.</p>
-  <p id="info_allow">Click the "Allow" button above to enable your microphone.</p>
-  <p id="info_denied">Permission to use microphone was denied.</p>
-  <p id="info_blocked">Permission to use microphone is blocked. To change,
-    go to chrome://settings/contentExceptions#media-stream</p>
-  <p id="info_upgrade">Web Speech API is not supported by this browser.
-     Upgrade to <a href="//www.google.com/chrome">Chrome</a>
-     version 25 or later.</p>
-</div>
-<div class="center">
-  <button id="start_button" onclick="startButton(event)">
-    <img id="start_img" src="images/mic.gif" alt="Start"></button>
-</div>
-<div id="results">
-  <span id="final_span" class="final"></span>
-  <span id="interim_span" class="interim"></span>
-  <p>
-</div>
-<div class="center" style="display:none;" >
-  <div id="div_language">
-    <select id="select_language" onchange="updateCountry()"></select>&nbsp;&nbsp;<select id="select_dialect"></select>
-  </div>
-</div>
-<script src="//code.jquery.com/jquery-2.1.3.min.js"></script>
-<script src="javascripts/dictation.js"></script>
 
+<script src="//code.jquery.com/jquery-2.1.3.min.js"></script>
 <script src="//cdn.jsdelivr.net/sparkjs/0.2.4/spark.min.js"></script> <!-- The script for SparkJS -->
 <script src="javascripts/colpick.js" type="text/javascript"></script>
+
 <script>
+  var bottomBrightnessLabel = document.getElementById("bottomBrightnessLabel");
+  var bottomBrightness = document.getElementById("bottomBrightness");
+  bottomBrightnessLabel.value = $('#bottomBrightness').val();
+  $('#bottomBrightness').on('input', function () {
+      bottomBrightnessLabel.value =$(this).val();
+  });
+  $('#bottomBrightnessLabel').on('change', function () {
+      bottomBrightness.value =$(this).val();
+  });
+
+  var rightBrightnessLabel = document.getElementById("rightBrightnessLabel");
+  var rightBrightness = document.getElementById("rightBrightness");
+  rightBrightnessLabel.value = $('#rightBrightness').val();
+  $('#rightBrightness').on('input', function () {
+      rightBrightnessLabel.value =$(this).val();
+  });
+  $('#rightBrightnessLabel').on('change', function () {
+      rightBrightness.value =$(this).val();
+  });
+
+  var backBrightnessLabel = document.getElementById("backBrightnessLabel");
+  var backBrightness = document.getElementById("backBrightness");
+  backBrightnessLabel.value = $('#backBrightness').val();
+  $('#backBrightness').on('input', function () {
+      backBrightnessLabel.value =$(this).val();
+  });
+  $('#backBrightnessLabel').on('change', function () {
+      backBrightness.value =$(this).val();
+  });
+
+  var leftBrightnessLabel = document.getElementById("leftBrightnessLabel");
+  var leftBrightness = document.getElementById("leftBrightness");
+  leftBrightnessLabel.value = $('#leftBrightness').val();
+  $('#leftBrightness').on('input', function () {
+      leftBrightnessLabel.value =$(this).val();
+  });
+  $('#leftBrightnessLabel').on('change', function () {
+      leftBrightness.value =$(this).val();
+  });
+
+  var topBrightnessLabel = document.getElementById("topBrightnessLabel");
+  var topBrightness = document.getElementById("topBrightness");
+  topBrightnessLabel.value = $('#topBrightness').val();
+  $('#topBrightness').on('input', function () {
+      topBrightnessLabel.value =$(this).val();
+  });
+  $('#topBrightnessLabel').on('change', function () {
+      topBrightness.value =$(this).val();
+  });
+
+  var allBrightnessLabel = document.getElementById("allBrightnessLabel");
+  var allBrightness = document.getElementById("allBrightness");
+  allBrightnessLabel.value = $('#allBrightness').val();
+  $('#allBrightness').on('input', function () {
+      allBrightnessLabel.value =$(this).val();
+      bottomBrightnessLabel.value =$(this).val();
+      rightBrightnessLabel.value =$(this).val();
+      backBrightnessLabel.value =$(this).val();
+      leftBrightnessLabel.value =$(this).val();
+      topBrightnessLabel.value =$(this).val();
+
+      bottomBrightness.value =$(this).val();
+      rightBrightness.value =$(this).val();
+      backBrightness.value =$(this).val();
+      leftBrightness.value =$(this).val();
+      topBrightness.value =$(this).val();
+  });
+  $('#allBrightnessLabel').on('change', function () {
+      allBrightness.value =$(this).val();
+      bottomBrightnessLabel.value =$(this).val();
+      rightBrightnessLabel.value =$(this).val();
+      backBrightnessLabel.value =$(this).val();
+      leftBrightnessLabel.value =$(this).val();
+      topBrightnessLabel.value =$(this).val();
+
+      bottomBrightness.value =$(this).val();
+      rightBrightness.value =$(this).val();
+      backBrightness.value =$(this).val();
+      leftBrightness.value =$(this).val();
+      topBrightness.value =$(this).val();
+  });
+
+
   var result = document.getElementById("result");
   var lasterror = document.getElementById("lasterror");
 
@@ -132,6 +190,7 @@ Made by: <a href="blog.anthonyngu.com" target="_blank">Anthony Ngu</a>
       var s = "000" + num;
       return s.substr(s.length-size);
   }
+
   $('#picker').colpick({
     flat:true,
     layout:'RGB',
@@ -188,7 +247,14 @@ Made by: <a href="blog.anthonyngu.com" target="_blank">Anthony Ngu</a>
     console.log("toggleLights was called");
     if(device.connected == true)
     {
-      device.callFunction('switchColor', document.getElementById("light-value").value, function(err, data) {
+      var input = document.getElementById("light-value").value +
+       ',' + pad(bottomBrightnessLabel.value,3) +
+       ',' + pad(rightBrightnessLabel.value,3) +
+       ',' + pad(backBrightnessLabel.value,3) +
+       ',' + pad(leftBrightnessLabel.value,3) +
+       ',' + pad(topBrightnessLabel.value,3)
+      console.log(input);
+      device.callFunction('switchColor', input, function(err, data) {
         if (err) {
           console.log('An error occurred:', err);
           lasterror.innerHTML = 'An error occured: ' + err;
