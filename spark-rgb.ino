@@ -19,7 +19,7 @@ void ShiftAllPixels();
 void setup()
 {
     Spark.function("switchColor", switchColor);
-    Spark.function("turnOff", turnOff);
+    Spark.function("seahawksColors", seahawksColors);
     // Set pins to outputs
     pinMode(stripClock, OUTPUT);
     pinMode(stripData, OUTPUT);
@@ -29,63 +29,13 @@ void setup()
     // Reset all the pixels
     for (int i = 0; i < stripLen; i++)
     {
-        SetPixel(i, 0, 0, 0);
+        SetPixel(i, 127, 127, 127);
     }
     ShiftAllPixels();
 }
 
 void loop()
 {
-    /*int i;
-
-    // Set the pixels to Red
-    for (i = 0; i < stripLen; i++)
-    {
-        SetPixel(i, (i & 0x7F), 0, 0);
-    }
-    ShiftAllPixels();
-
-    // Set the pixels to Green
-    for (i = 0; i < stripLen; i++)
-    {
-        SetPixel(i, 0, (i & 0x7F), 0);
-    }
-    ShiftAllPixels();
-
-    // Set the pixels to Blue
-    for (i = 0; i < stripLen; i++)
-    {
-        SetPixel(i, 0, 0, (i & 0x7F));
-    }
-    ShiftAllPixels();
-
-    // Set the pixels to White
-    for (i = 0; i < stripLen; i++)
-    {
-        SetPixel(i, (i & 0x7F), (i & 0x7F), (i & 0x7F));
-    }
-    ShiftAllPixels();
-
-    // Set the pixels to gradient from Yellow to Cyan
-    for (i = 0; i < stripLen; i++)
-    {
-        SetPixel(i, ((stripLen - i) & 0x7F), ((128 + (stripLen / 2) + i) & 0x7F), (i & 0x7F));
-    }
-    ShiftAllPixels();
-
-    // Set the pixels to random colors
-    for (i = 0; i < stripLen; i++)
-    {
-        SetPixel(i, (byte) random(0, 40), (byte) random(0, 40), (byte) random(0, 40));
-    }
-    ShiftAllPixels();
-
-    // Turn the pixels off
-    for (i = 0; i < stripLen; i++)
-    {
-        SetPixel(i, 0, 0, 0);
-    }
-    ShiftAllPixels();*/
 }
 
 int scaleColor(int color)
@@ -95,8 +45,11 @@ int scaleColor(int color)
 
 int switchColor(String command)
 {
-    // command will be of format 127,127,127
+    // command will be of format 127,127,127,100,100,100,100,100
+    // R,G,B,BottomBrightness,RightBrightness,BackBrightness,LeftBrightness,TopBrightness
     // any values less than 127 will be filled with spaces
+    // The strip is divided into groups of 4 per side. First 4 are bottom, Next 4 are right, etc.
+
     String red = command;
     String green = command;
     String blue = command;
@@ -104,28 +57,73 @@ int switchColor(String command)
     green.remove(0,4);
     green.remove(3);
     blue.remove(0,8);
-
+    blue.remove(3);
     int redInt = scaleColor(red.toInt());
     int greenInt = scaleColor(green.toInt());
     int blueInt = scaleColor(blue.toInt());
 
-    int i;
-    // Set the pixels to White
-    for (i = 0; i < stripLen; i++)
+    String bottom = command;
+    String right = command;
+    String back = command;
+    String left = command;
+    String top = command;
+    bottom.remove(0,12);
+    bottom.remove(3);
+    right.remove(0,16);
+    right.remove(3);
+    back.remove(0,20);
+    back.remove(3);
+    left.remove(0,24);
+    left.remove(3);
+    top.remove(0,28);
+    int bottomInt = bottom.toInt();
+    int rightInt = right.toInt();
+    int backInt = back.toInt();
+    int leftInt = left.toInt();
+    int topInt = top.toInt();
+
+    int pixelsPerSide = 4;
+    for (int i = 0; i < stripLen; i++)
     {
-        SetPixel(i, (redInt & 0x7F), (greenInt & 0x7F), (blueInt & 0x7F));
+        if(i < pixelsPerSide)
+        {
+            SetPixel(i, ((redInt * bottomInt / 100) & 0x7F), ((greenInt  * bottomInt / 100) & 0x7F), ((blueInt * bottomInt / 100) & 0x7F));
+        }
+        else if(i < (pixelsPerSide * 2))
+        {
+            SetPixel(i, ((redInt * rightInt / 100) & 0x7F), ((greenInt  * rightInt / 100) & 0x7F), ((blueInt * rightInt / 100) & 0x7F));
+        }
+        else if(i < (pixelsPerSide * 3))
+        {
+            SetPixel(i, ((redInt * backInt / 100) & 0x7F), ((greenInt  * backInt / 100) & 0x7F), ((blueInt * backInt / 100) & 0x7F));
+        }
+        else if(i < (pixelsPerSide * 4))
+        {
+            SetPixel(i, ((redInt * leftInt / 100) & 0x7F), ((greenInt  * leftInt / 100) & 0x7F), ((blueInt * leftInt / 100) & 0x7F));
+        }
+        else if(i < (pixelsPerSide * 5))
+        {
+            SetPixel(i, ((redInt * topInt / 100) & 0x7F), ((greenInt  * topInt / 100) & 0x7F), ((blueInt * topInt / 100) & 0x7F));
+        }
+        else
+        {
+            SetPixel(i, (redInt & 0x7F), (greenInt & 0x7F), (blueInt & 0x7F));
+        }
     }
     ShiftAllPixels();
 
     return 1;
 }
 
-int turnOff(String command)
+int seahawksColors(String command)
 {
-    int i;
-    for (i = 0; i < stripLen; i++)
+    // Set the pixels to Green
+    for (int i = 0; i < stripLen; i++)
     {
-        SetPixel(i, 0, 0, 0);
+        if(i%2 == 0)
+        { SetPixel(i, 0, (i & 0x7F), 0); }
+        else
+        { SetPixel(i, 0, 0, (i & 0x7F)); }
     }
     ShiftAllPixels();
 
