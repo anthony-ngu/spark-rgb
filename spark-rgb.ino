@@ -1,6 +1,7 @@
 const int stripClock = D2;
 const int stripData = D3;
 const int stripLen = 48;
+bool animateBool = false;
 
 typedef struct _PIXEL_VALUES {
     byte Green;
@@ -10,6 +11,7 @@ typedef struct _PIXEL_VALUES {
 
 // Array of stored Pixel values
 PIXEL_VALUES Pixels[stripLen];
+PIXEL_VALUES PixelsMax[stripLen];
 
 // Custom Functions for working with the RGB Pixel Strip
 void SetPixel(int pixel, byte Red, byte Green, byte Blue);
@@ -19,7 +21,8 @@ void ShiftAllPixels();
 void setup()
 {
     Spark.function("switchColor", switchColor);
-    Spark.function("seahawksColors", seahawksColors);
+    Spark.function("seahawks", seahawksColors); // can't be longer than 12 characters
+    Spark.function("animate", animateColors);
     // Set pins to outputs
     pinMode(stripClock, OUTPUT);
     pinMode(stripData, OUTPUT);
@@ -36,6 +39,25 @@ void setup()
 
 void loop()
 {
+    if (animateBool == true)
+    {
+        for(int j = 0; j <= 100; j++)
+        {
+            for (int i = 0; i < stripLen; i++)
+            {
+                SetPixelAltered(i,  ((PixelsMax[i].Red * j / 100) & 0x7F), ((PixelsMax[i].Green * j / 100) & 0x7F), ((PixelsMax[i].Blue * j / 100) & 0x7F));
+            }
+            ShiftAllPixels();
+        }
+        for(int j = 100; j >= 0; j--)
+        {
+            for (int i = 0; i < stripLen; i++)
+            {
+                SetPixelAltered(i,  ((PixelsMax[i].Red * j / 100) & 0x7F), ((PixelsMax[i].Green * j / 100) & 0x7F), ((PixelsMax[i].Blue * j / 100) & 0x7F));
+            }
+            ShiftAllPixels();
+        }
+    }
 }
 
 int scaleColor(int color)
@@ -130,8 +152,28 @@ int seahawksColors(String command)
     return 1;
 }
 
+int animateColors(String command)
+{
+    animateBool = !animateBool;
+    return 1;
+}
+
 // Sets the pixel color in our array
 void SetPixel(int pixel, byte Red, byte Green, byte Blue)
+{
+    if (pixel < stripLen)
+    {
+        Pixels[pixel].Red = Red | 0x80;
+        Pixels[pixel].Green = Green | 0x80;
+        Pixels[pixel].Blue = Blue | 0x80;
+
+        PixelsMax[pixel].Red = Red | 0x80;
+        PixelsMax[pixel].Green = Green | 0x80;
+        PixelsMax[pixel].Blue = Blue | 0x80;
+    }
+}
+
+void SetPixelAltered(int pixel, byte Red, byte Green, byte Blue)
 {
     if (pixel < stripLen)
     {

@@ -90,6 +90,7 @@ Made by: <a href="blog.anthonyngu.com" target="_blank">Anthony Ngu</a>
   <br/>
   <button onclick="toggleLights()">Toggle Lights</button>
   <button onclick="seahawksLights()">Seahawks Lights</button>
+  <button onclick="animateColors()">Animate</button>
 </div>
 <div id="result">
 </div>
@@ -277,7 +278,29 @@ Made by: <a href="blog.anthonyngu.com" target="_blank">Anthony Ngu</a>
     console.log("seahawksLights was called");
     if(device.connected == true)
     {
-      device.callFunction('seahawksLights', '', function(err, data) {
+      device.callFunction('seahawks', '', function(err, data) {
+        if (err) {
+          console.log('An error occurred:', err);
+          lasterror.innerHTML = 'An error occured: ' + err;
+        } else {
+          console.log('Function called succesfully:', data);
+          lasterror.innerHTML = 'Function called succesfully ' + data;
+        }
+      });
+    }else{
+      console.log('Tried to change the color, but the spark was not connected.');
+      lasterror.innerHTML = 'Cannot make change your lights because your Spark is not connected';
+    }
+  }
+
+  function animateColors(){
+    console.log(device);
+    console.log(device_list);
+    device = device_list[document.getElementById("sparkDeviceNumber").value];
+    console.log("animate was called");
+    if(device.connected == true)
+    {
+      device.callFunction('animate', '', function(err, data) {
         if (err) {
           console.log('An error occurred:', err);
           lasterror.innerHTML = 'An error occured: ' + err;
