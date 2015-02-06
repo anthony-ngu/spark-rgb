@@ -1,6 +1,6 @@
 const int stripClock = D2;
 const int stripData = D3;
-const int stripLen = 48;
+int stripLen = 48;
 bool animateBool = false;
 
 typedef struct _PIXEL_VALUES {
@@ -10,8 +10,8 @@ typedef struct _PIXEL_VALUES {
 } PIXEL_VALUES, *PPIXEL_VALUES;
 
 // Array of stored Pixel values
-PIXEL_VALUES Pixels[stripLen];
-PIXEL_VALUES PixelsMax[stripLen];
+PIXEL_VALUES *Pixels;
+PIXEL_VALUES *PixelsMax;
 
 // Custom Functions for working with the RGB Pixel Strip
 void SetPixel(int pixel, byte Red, byte Green, byte Blue);
@@ -20,6 +20,9 @@ void ShiftAllPixels();
 
 void setup()
 {
+    Pixels = new PIXEL_VALUES[stripLen];
+    PixelsMax = new PIXEL_VALUES[stripLen];
+    
     Spark.function("switchColor", switchColor);
     Spark.function("seahawks", seahawksColors); // can't be longer than 12 characters
     Spark.function("animate", animateColors);
@@ -65,12 +68,36 @@ int scaleColor(int color)
     return (double)color / 255 * 127;
 }
 
+void changeSize(String command)
+{
+    String length = command;
+    length.remove(3);
+    int l = length.toInt();
+    if(l != stripLen)
+    {
+        // Reset all the pixels prior to resetting it
+        for (int i = 0; i < stripLen; i++)
+        {
+            SetPixel(i, 127, 127, 127);
+        }
+        ShiftAllPixels();
+        
+        stripLen = l;
+        Pixels = new PIXEL_VALUES[stripLen];
+        PixelsMax = new PIXEL_VALUES[stripLen];
+    }
+}
+
 int switchColor(String command)
 {
-    // command will be of format 127,127,127,100,100,100,100,100
+    // command will be of format 048,127,127,127,100,100,100,100,100
     // R,G,B,BottomBrightness,RightBrightness,BackBrightness,LeftBrightness,TopBrightness
     // any values less than 127 will be filled with spaces
     // The strip is divided into groups of 4 per side. First 4 are bottom, Next 4 are right, etc.
+
+    changeSize(command);
+    
+    command.remove(0,4);
 
     String red = command;
     String green = command;
@@ -139,6 +166,8 @@ int switchColor(String command)
 
 int seahawksColors(String command)
 {
+    changeSize(command);
+    
     // Set the pixels to Green
     for (int i = 0; i < stripLen; i++)
     {
@@ -154,6 +183,8 @@ int seahawksColors(String command)
 
 int animateColors(String command)
 {
+    changeSize(command);
+    
     animateBool = !animateBool;
     return 1;
 }
