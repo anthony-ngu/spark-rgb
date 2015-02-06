@@ -116,64 +116,66 @@
           <input id="allBrightnessLabel" type="text">
         </div>
       </div>
-      
-      <div class="row">
-        <div class="col-md-3 inputLabel">
-          Bottom Brightness:
+      <div>
+        <h4>Box Brightness Settings (Divides the strip into 5 sections [bottom,right,back,left,top])</h4>
+        <div class="row">
+          <div class="col-md-3 inputLabel">
+            Bottom Brightness:
+          </div>
+          <div class="col-md-6">
+            <input id="bottomBrightness" type="range" value="100" min="0" max="100"> 
+          </div>
+          <div class="col-md-3">
+            <input id="bottomBrightnessLabel" type="text">
+          </div>
         </div>
-        <div class="col-md-6">
-          <input id="bottomBrightness" type="range" value="100" min="0" max="100"> 
+         
+        <div class="row">
+          <div class="col-md-3 inputLabel">
+            Right Brightness:
+          </div>
+          <div class="col-md-6">
+            <input id="rightBrightness" type="range" value="100" min="0" max="100">
+          </div>
+          <div class="col-md-3">
+            <input id="rightBrightnessLabel" type="text">
+          </div>
         </div>
-        <div class="col-md-3">
-          <input id="bottomBrightnessLabel" type="text">
+        
+        <div class="row">
+          <div class="col-md-3 inputLabel">
+           Back Brightness:
+          </div>
+          <div class="col-md-6">
+            <input id="backBrightness" type="range" value="100" min="0" max="100"> 
+          </div>
+          <div class="col-md-3">
+            <input id="backBrightnessLabel" type="text">
+          </div>
         </div>
-      </div>
-       
-      <div class="row">
-        <div class="col-md-3 inputLabel">
-          Right Brightness:
+         
+        <div class="row">
+          <div class="col-md-3 inputLabel">
+            Left Brightness:
+          </div>
+          <div class="col-md-6">
+            <input id="leftBrightness" type="range" value="100" min="0" max="100">
+          </div>
+          <div class="col-md-3">
+            <input id="leftBrightnessLabel" type="text">
+          </div>
         </div>
-        <div class="col-md-6">
-          <input id="rightBrightness" type="range" value="100" min="0" max="100">
-        </div>
-        <div class="col-md-3">
-          <input id="rightBrightnessLabel" type="text">
-        </div>
-      </div>
-      
-      <div class="row">
-        <div class="col-md-3 inputLabel">
-         Back Brightness:
-        </div>
-        <div class="col-md-6">
-          <input id="backBrightness" type="range" value="100" min="0" max="100"> 
-        </div>
-        <div class="col-md-3">
-          <input id="backBrightnessLabel" type="text">
-        </div>
-      </div>
-       
-      <div class="row">
-        <div class="col-md-3 inputLabel">
-          Left Brightness:
-        </div>
-        <div class="col-md-6">
-          <input id="leftBrightness" type="range" value="100" min="0" max="100">
-        </div>
-        <div class="col-md-3">
-          <input id="leftBrightnessLabel" type="text">
-        </div>
-      </div>
-       
-      <div class="row">
-        <div class="col-md-3 inputLabel">
-          Top Brightness:
-        </div>
-        <div class="col-md-6">
-          <input id="topBrightness" type="range" value="100" min="0" max="100">
-        </div>
-        <div class="col-md-3">
-          <input id="topBrightnessLabel" type="text">
+         
+        <div class="row">
+          <div class="col-md-3 inputLabel">
+            Top Brightness:
+          </div>
+          <div class="col-md-6">
+            <input id="topBrightness" type="range" value="100" min="0" max="100">
+          </div>
+          <div class="col-md-3">
+            <input id="topBrightnessLabel" type="text">
+          </div>
         </div>
       </div>
       <button onclick="toggleLights()">Toggle Lights</button>
@@ -184,6 +186,7 @@
   <div class="col-md-6">
     <div id="result">
     </div>
+    <br/>
     <div id="lasterror">
     </div>
     <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
@@ -334,14 +337,6 @@
           result.innerHTML += '<br/>Device ' + i + ' name: ' + device.name + '</br>';
           console.log('- connected?: ' + device.connected);
           result.innerHTML += '- connected?: ' + device.connected + '</br>';
-          console.log('- variables: ' + device.variables);
-          result.innerHTML += '- variables: ' + device.variables + '</br>';
-          console.log('- functions: ' + device.functions);
-          result.innerHTML += '- functions: ' + device.functions + '</br>';
-          console.log('- version: ' + device.version);
-          result.innerHTML += '- version: ' + device.version + '</br>';
-          console.log('- requires upgrade?: ' + device.requiresUpgrade);
-          result.innerHTML += '- requires upgrade?: ' + device.requiresUpgrade + '</br>';
         }
       });
   });

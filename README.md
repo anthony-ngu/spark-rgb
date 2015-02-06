@@ -27,3 +27,9 @@ Connecting an RGB LED Strip, Spark Core, and Node.js Webpage!
   2. Download the firmware.bin and install it yourself through a USB connection to your Spark device.
 4. The elegance of the Node.js solution is how easy it is for anyone to use it! If you go to [http://sparkrgb.azurewebsites.net](http://sparkrgb.azurewebsites.net) you can login with your Spark Credentials and interact with your own Spark Core!
   * The code for this site is in this repository too, it uses [SparkJS](http://docs.spark.io/javascript/) to allow you to login to your own Spark account and interact with your own spark devices.
+
+## In the works:
+* Better documentation on the code for the webpage, how to push to Azure, and Spark Code.
+* I am planning on continuing this to build a light box with LED's on 5 or 6 sides that can all be individually toggled. (Thus the Bottom, Right, Left, etc. brightness settings)
+
+Original RGB LED Strip code was from an ms-iot [example project.](https://github.com/ms-iot/content/blob/develop/RGBPixel.md)
